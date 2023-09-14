@@ -1,22 +1,31 @@
-import { Heading } from "components/Heading/Heading";
-import { Book } from "components/Book/Book";
+import { Heading } from 'components/Heading/Heading';
+import { Book } from 'components/Book/Book';
+
+import booksJson from './books';
+
+import css from './App.module.css';
+
+const books = booksJson.books;
 
 export const App = props => {
- 
   return (
     <div>
       <Heading>React lesson 2, CSS</Heading>
-      <ul>
-        <Book 
-          title="To Kill a Mockingbird"
-          author="Harper Lee"
-          year={1960}
-          genre="novel"
-          favourite={false}
-          cover="https://images.gr-assets.com/books/1361975680l/2657.jpg"
-        />
+      <ul className={css.booksList}>
+        {books.map(book => {
+          return (
+            <Book
+              key={`${book.title}${book.author}`}
+              title={book.title}
+              author={book.author}
+              year={book.year}
+              genre={book.genre}
+              favourite={book.favourite}
+              cover={book.cover}
+            />
+          );
+        })}
       </ul>
     </div>
   );
 };
-

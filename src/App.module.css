@@ -1,1 +1,8 @@
-
+.booksList {
+  padding: 0 15px;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 212px 212px 212px;
+  justify-content: center;
+  gap: 20px;
+}
