@@ -1,0 +1,8 @@
+.headingLv1 {
+  background-color: tomato;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 22px;
+  border: 1px solid orange;
+  padding: 15px;
+}
