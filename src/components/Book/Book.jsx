@@ -2,7 +2,15 @@ import css from './Book.module.scss';
 import { ReactComponent as IconHeart } from '../../assets/images/heart.svg';
 // import iconHeart from '../../assets/images/heart.svg';
 
-export const Book = ({ title, author, year, genre, favourite, cover }) => {
+export const Book = ({
+  title,
+  author,
+  year,
+  genre,
+  favourite,
+  cover,
+  handleDeleteBook,
+}) => {
   return (
     <li className={css.book}>
       <div className={css.thumbWrapper}>
@@ -21,6 +29,9 @@ export const Book = ({ title, author, year, genre, favourite, cover }) => {
       <p className={css.genre}>
         Genre: <b>{genre}</b>
       </p>
+      <button onClick={() => handleDeleteBook(title)}>
+        Delete &times;
+      </button>
     </li>
   );
 };
