@@ -1,0 +1,28 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.modal {
+  position: absolute;
+  width: 100%;
+  max-width: 550px;
+  height: 100%;
+  max-height: 400px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 25px;
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.closeModalBtn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}

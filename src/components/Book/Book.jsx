@@ -10,6 +10,7 @@ export const Book = ({
   favourite,
   cover,
   handleDeleteBook,
+  onOpenModal,
 }) => {
   return (
     <li className={css.book}>
@@ -29,8 +30,9 @@ export const Book = ({
       <p className={css.genre}>
         Genre: <b>{genre}</b>
       </p>
-      <button onClick={() => handleDeleteBook(title)}>
-        Delete &times;
+      <button onClick={() => handleDeleteBook(title)}>Delete &times;</button>
+      <button onClick={() => onOpenModal({ title, author })}>
+        Open Modal with some details
       </button>
     </li>
   );
