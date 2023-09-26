@@ -14,7 +14,7 @@ const books = booksJson.books;
 
 export class App extends Component {
   state = {
-    appBooks: [],
+    appBooks: books,
     deletedBooksCount: 0,
     modal: {
       isOpen: false,
