@@ -10,6 +10,7 @@
     "axios": "^1.5.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-loader-spinner": "^5.4.5",
     "react-scripts": "5.0.1",
     "sass": "^1.67.0",
     "styled-components": "^6.0.8",

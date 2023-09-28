@@ -6,3 +6,10 @@ export const fetchPosts = async () => {
   );
   return data;
 };
+
+export const findPostById = async postId => {
+  const { data } = await axios.get(
+    `https://jsonplaceholder.typicode.com/posts/${postId}`
+  );
+  return data;
+};
