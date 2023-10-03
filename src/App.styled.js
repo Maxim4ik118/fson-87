@@ -40,4 +40,23 @@ export const StyledAppContainer = styled.div`
     background-color: red;
     color: white;
   }
+
+  .typeBtn {
+    display: inline-flex;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid transparent;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 10px;
+
+    transition: all .3s;
+
+    &.active {
+      color: black;
+      border: 1px solid black;
+      background-color: #fff;
+    }
+  }
 `;
