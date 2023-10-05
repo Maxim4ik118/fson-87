@@ -1,23 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import DetailsInnerContent from './DetailsInnerContent';
+import { DetailsContext } from 'context/DetaisContext';
 
 const DetailsSection = () => {
-  const [showDetails, setShowDetails] = useState(false);
   const [dataType, setDataType] = useState('users'); // "users" | "posts" | "comments"
-
-  const handleToggleDetails = () => {
-    // setShowDetails((prevState) => !prevState)
-    setShowDetails(!showDetails);
-  };
-
-
-  useEffect(() => {
-    console.log('ALERT MOSCWA GORIT!!!!');
-  }, [dataType])
+  const { showDetails } = useContext(DetailsContext);
 
   return (
-    <div>
-      <button onClick={handleToggleDetails}>Click to toggle the details</button>
+    <div
+      style={{
+        border: '1px solid black',
+        borderRadius: '15px',
+        marginBottom: '35px',
+        marginTop: '35px',
+        padding: '25px',
+      }}
+    >
       {showDetails && <DetailsInnerContent dataType={dataType} />}
       <div>
         <button

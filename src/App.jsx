@@ -4,6 +4,13 @@ import { StyledAppContainer } from 'App.styled';
 import { fetchPosts, findPostById } from 'services/api';
 import { ColorRing } from 'react-loader-spinner';
 import DetailsSection from 'components/DetailsSection';
+import PostListItem from 'components/PostListItem';
+import PostList from 'components/PostList';
+import Loader from 'components/Loader';
+import ErrorMessage from 'components/ErrorMessage';
+import SearchPostForm from 'components/SearchPostForm';
+import UseRefExample from 'components/UseRefExample';
+import UseMemoExapmle from 'components/UseMemoExapmle';
 
 export const App = () => {
   const [posts, setPosts] = useState(null);
@@ -34,23 +41,12 @@ export const App = () => {
     event.currentTarget.reset();
   };
 
-  // const [options, setOptions] = useState({ abuba: 1, aboba: 1, grisha: 1 });
-
-  // const handleAddOption = (optionName) => {
-  //   setOptions((prevState) => ({
-  //     ...prevState,
-  //      [optionName]: prevState[optionName] + 1,
-  //    }))
-  // }
-  // handleAddOption("grisha");
-
-
   useEffect(() => {
     fetchAllPosts();
   }, []);
 
   useEffect(() => {
-    if(!searchedPostId) return;
+    if (!searchedPostId) return;
 
     const fetchPostById = async () => {
       try {
@@ -68,54 +64,23 @@ export const App = () => {
     fetchPostById();
   }, [searchedPostId]);
 
-
-
-  const showPosts = Array.isArray(posts) && posts.length;
   return (
     <>
       <StyledAppContainer>
         <h1 className="title">App Title</h1>
-        <DetailsSection />
+        {/* <DetailsSection />
+        <SearchPostForm
+          handleSearchSubmit={handleSearchSubmit}
+          fetchAllPosts={fetchAllPosts}
+        /> */}
 
-        <form onSubmit={handleSearchSubmit}>
-          <label>
-            <p>Enter post ID to find in database:</p>
-            <input type="text" name="searchPostId" placeholder="Enter postID" />
-            <button type="submit">Search</button>
-            <button onClick={() => fetchAllPosts()} type="button">
-              Reset
-            </button>
-          </label>
-        </form>
+        {/* {isLoading && <Loader />}
+        {error && <ErrorMessage message={error} />} */}
 
-        {isLoading && (
-          <div>
-            <ColorRing
-              visible={true}
-              height="80"
-              width="80"
-              ariaLabel="blocks-loading"
-              wrapperStyle={{}}
-              wrapperClass="blocks-wrapper"
-              colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
-            />
-          </div>
-        )}
-        {error && <p className="error">{error}</p>}
+        {/* <PostList posts={posts} /> */}
 
-        <ul className="postList">
-          {showPosts &&
-            posts.map(post => {
-              return (
-                <li key={post.id} className="postListItem">
-                  <span>Id: {post.id}</span>
-                  <h3>Title: {post.title}</h3>
-                  <h4>User Id: {post.userId}</h4>
-                  <p>Body: {post.body}</p>
-                </li>
-              );
-            })}
-        </ul>
+        {/* <UseRefExample /> */}
+        <UseMemoExapmle />
       </StyledAppContainer>
     </>
   );
