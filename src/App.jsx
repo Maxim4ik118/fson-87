@@ -24,33 +24,28 @@ import PostDetailsPage from 'pages/PostDetailsPage';
 
 export const App = () => {
   return (
-      <StyledAppContainer>
-        <header>
-          <nav>
-            <NavLink className="header-link" to="/">
-              Home
-            </NavLink>
-            <NavLink className="header-link" to="/posts">
-              Posts
-            </NavLink>
-            <NavLink className="header-link" to="/search">
-              Search
-            </NavLink>
-          </nav>
-        </header>
+    <StyledAppContainer>
+      <header>
+        <nav>
+          <NavLink className="header-link" to="/">
+            Home
+          </NavLink>
+          <NavLink className="header-link" to="/posts">
+            Posts
+          </NavLink>
+          <NavLink className="header-link" to="/search">
+            Search
+          </NavLink>
+        </nav>
+      </header>
 
-        <Routes>
-          <Route path='/' element={<HomePage />}/>
-          <Route path='/posts' element={<PostsPage />}/>
-          <Route path='/search' element={<SearchPage />}/>
-          {/* /posts/d12dWAF@ */}
-          <Route path='/post-details/:postId' element={<PostDetailsPage />}/>
-        </Routes>
-      </StyledAppContainer>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/posts" element={<PostsPage />} />
+        <Route path="/search" element={<SearchPage />} />
+        {/* /posts/d12dWAF@ */}
+        <Route path="/post-details/:postId/*" element={<PostDetailsPage />} />
+      </Routes>
+    </StyledAppContainer>
   );
 };
-
-
-// Чи практикується кодування в одному компоненті, і тільки потім розносити по окремих? 
-
-// чи краще відразу розносити?

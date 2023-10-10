@@ -13,3 +13,10 @@ export const findPostById = async postId => {
   );
   return data;
 };
+
+export const findPostCommentsById = async postId => {
+  const { data } = await axios.get(
+    `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
+  );
+  return data;
+};
