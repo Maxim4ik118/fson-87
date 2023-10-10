@@ -1,87 +1,56 @@
-import { useEffect, useState } from 'react';
+import { NavLink, Route, Routes } from 'react-router-dom';
+
+import HomePage from 'pages/HomePage';
+import PostsPage from 'pages/PostsPage';
 
 import { StyledAppContainer } from 'App.styled';
-import { fetchPosts, findPostById } from 'services/api';
-import { ColorRing } from 'react-loader-spinner';
-import DetailsSection from 'components/DetailsSection';
-import PostListItem from 'components/PostListItem';
-import PostList from 'components/PostList';
-import Loader from 'components/Loader';
-import ErrorMessage from 'components/ErrorMessage';
-import SearchPostForm from 'components/SearchPostForm';
-import UseRefExample from 'components/UseRefExample';
-import UseMemoExapmle from 'components/UseMemoExapmle';
+import SearchPage from 'pages/SearchPage';
+import PostDetailsPage from 'pages/PostDetailsPage';
+
+/*
+Маршрутизація:
+
+ <a href="www.google.com">Google</a> - будь-які посилання на зовнішні ресурси, 
+ поза нашим додатком
+
+ <Link to="/some-route">Some page</Link>
+ <NavLink to="/some-route"> Some page</NavLink> - для маршутизації по нашому додатку
+
+  1. Зміна адресної строки браузера.
+  2. Підготувати Route для відображення, тієї чи іншої сторінки 
+     <Route path="/some-route" element={<HomePage />} />
+
+*/
 
 export const App = () => {
-  const [posts, setPosts] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [searchedPostId, setSearchedPostId] = useState(null);
-
-  const fetchAllPosts = async () => {
-    try {
-      setIsLoading(true);
-      const postsData = await fetchPosts();
-
-      setPosts(postsData);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSearchSubmit = event => {
-    event.preventDefault();
-
-    const searchedPostIdValue = event.currentTarget.elements.searchPostId.value;
-
-    setSearchedPostId(searchedPostIdValue);
-
-    event.currentTarget.reset();
-  };
-
-  useEffect(() => {
-    fetchAllPosts();
-  }, []);
-
-  useEffect(() => {
-    if (!searchedPostId) return;
-
-    const fetchPostById = async () => {
-      try {
-        setIsLoading(true);
-        const post = await findPostById(searchedPostId);
-
-        setPosts([post]);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPostById();
-  }, [searchedPostId]);
-
   return (
-    <>
       <StyledAppContainer>
-        <h1 className="title">App Title</h1>
-        {/* <DetailsSection />
-        <SearchPostForm
-          handleSearchSubmit={handleSearchSubmit}
-          fetchAllPosts={fetchAllPosts}
-        /> */}
+        <header>
+          <nav>
+            <NavLink className="header-link" to="/">
+              Home
+            </NavLink>
+            <NavLink className="header-link" to="/posts">
+              Posts
+            </NavLink>
+            <NavLink className="header-link" to="/search">
+              Search
+            </NavLink>
+          </nav>
+        </header>
 
-        {/* {isLoading && <Loader />}
-        {error && <ErrorMessage message={error} />} */}
-
-        {/* <PostList posts={posts} /> */}
-
-        {/* <UseRefExample /> */}
-        <UseMemoExapmle />
+        <Routes>
+          <Route path='/' element={<HomePage />}/>
+          <Route path='/posts' element={<PostsPage />}/>
+          <Route path='/search' element={<SearchPage />}/>
+          {/* /posts/d12dWAF@ */}
+          <Route path='/post-details/:postId' element={<PostDetailsPage />}/>
+        </Routes>
       </StyledAppContainer>
-    </>
   );
 };
+
+
+// Чи практикується кодування в одному компоненті, і тільки потім розносити по окремих? 
+
+// чи краще відразу розносити?

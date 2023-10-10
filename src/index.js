@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from 'App';
 import './index.css';
-import { DetailsContextProvider } from 'context/DetaisContext';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <DetailsContextProvider>
+  <BrowserRouter>
     <App />
-  </DetailsContextProvider>
+  </BrowserRouter>
 );

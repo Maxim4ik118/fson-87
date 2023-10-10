@@ -41,22 +41,22 @@ export const StyledAppContainer = styled.div`
     color: white;
   }
 
-  .typeBtn {
-    display: inline-flex;
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid transparent;
-    color: #fff;
-    cursor: pointer;
-    text-align: center;
+  .header-link {
+    color: black;
+    border: 1px solid black;
     border-radius: 10px;
+    display: inline-block;
+    padding: 20px;
+    font-size: 22px;
+    text-decoration: none;
+    margin-right: 15px;
 
-    transition: all .3s;
+    transition: all 0.3s;
 
     &.active {
-      color: black;
-      border: 1px solid black;
-      background-color: #fff;
+      border: 1px solid white;
+      background-color: black;
+      color: white;
     }
   }
 `;
