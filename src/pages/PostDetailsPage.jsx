@@ -1,12 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink, Route, Routes, useParams } from 'react-router-dom';
-import PostCommentsPage from './PostCommentsPage';
-import { findPostById } from 'services/api';
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import {
+  Link,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from 'react-router-dom';
+// import PostCommentsPage from './PostCommentsPage';
 import Loader from 'components/Loader';
 import ErrorMessage from 'components/ErrorMessage';
 
+import { findPostById } from 'services/api';
+
+const PostCommentsPage = lazy(() => import('pages/PostCommentsPage'))
+
 const PostDetailsPage = () => {
   const { postId } = useParams();
+  const location = useLocation();
+  const backLinkHref = useRef(location.state?.from ?? '/');
+
   const [postDetails, setPostDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -32,6 +45,8 @@ const PostDetailsPage = () => {
 
   return (
     <div>
+      <Link to={backLinkHref.current}>Go Back</Link>
+
       {isLoading && <Loader />}
       {error && <ErrorMessage message={error} />}
       {postDetails !== null && (
@@ -47,9 +62,11 @@ const PostDetailsPage = () => {
         </NavLink>
       </div>
 
-      <Routes>
-        <Route path="comments" element={<PostCommentsPage />} />
-      </Routes>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="comments" element={<PostCommentsPage />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };
