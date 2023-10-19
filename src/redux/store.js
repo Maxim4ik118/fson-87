@@ -1,11 +1,35 @@
-import { devToolsEnhancer } from "@redux-devtools/extension";
-import { createStore, combineReducers } from "redux";
-import { postDetailsReducer } from "./postDetailReducer";
+import { configureStore } from '@reduxjs/toolkit';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
+import { postDetailsReducer } from './postDetailReducer';
 
-const rootReducer = combineReducers({
-    postDetails: postDetailsReducer,
-})
+const postDetailsConfig = {
+  key: 'postDetails',
+  storage,
+  whitelist: ['posts'],
+//   blacklist: ['filter'],
+};
 
-const enhancer = devToolsEnhancer();
-export const store = createStore(rootReducer, enhancer);
+export const store = configureStore({
+  reducer: {
+    postDetails: persistReducer(postDetailsConfig, postDetailsReducer),
+  },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
+
+export const persistor = persistStore(store);
