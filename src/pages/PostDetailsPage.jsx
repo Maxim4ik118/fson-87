@@ -12,13 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
 import ErrorMessage from 'components/ErrorMessage';
 
-import { findPostById } from 'services/api';
-import {
-  addPost,
-  setError,
-  setIsLoading,
-  setPostDetails,
-} from 'redux/postDetailReducer';
+import { requestPostDetails } from 'redux/postDetailReducer';
+import { toast } from 'react-toastify';
 
 const PostCommentsPage = lazy(() => import('pages/PostCommentsPage'));
 
@@ -35,28 +30,25 @@ const PostDetailsPage = () => {
   useEffect(() => {
     if (!postId) return;
 
-    const fetchAllPosts = async () => {
-      try {
-        dispatch(setIsLoading(true));
-        const postData = await findPostById(postId);
-
-        dispatch(setPostDetails(postData));
-      } catch (error) {
-        dispatch(setError(error.message));
-      } finally {
-        dispatch(setIsLoading(false));
-      }
-    };
-
-    fetchAllPosts();
+    dispatch(requestPostDetails(postId))
+      .unwrap()
+      .then(() => {
+        toast.success('Hi! Post details was successfully fetched!', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+      });
   }, [postId, dispatch]);
 
   return (
     <div>
       <Link to={backLinkHref.current}>Go Back</Link>
-      <button onClick={() => dispatch(addPost({ title: '123', body: '123' }))}>
-        Click to add post to STATE
-      </button>
       {isLoading && <Loader />}
       {error && <ErrorMessage message={error} />}
       {postDetails !== null && (

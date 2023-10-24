@@ -1,51 +1,31 @@
-import { ReactComponent as IconSearch } from 'assets/images/search.svg';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+
 import ErrorMessage from 'components/ErrorMessage';
 import Loader from 'components/Loader';
-import { useEffect, useState } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
-import { findPostById } from 'services/api';
 
-// (async () => { // -- IIFE (Immediately invoked function expression)
-//   try {
-//     setIsLoading(true);
-//     const postData = await findPostById(query);
+import { requestPosts } from 'redux/postsReducer';
 
-//     setPosts([postData]);
-//   } catch (error) {
-//     setError(error.message);
-//   } finally {
-//     setIsLoading(false);
-//   }
-// })()
+import { ReactComponent as IconSearch } from 'assets/images/search.svg';
+
 
 const SearchPage = () => {
-  // /search?query=56
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
-  const [posts, setPosts] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+
+  const posts = useSelector(state => state.postsData.posts);
+  const isLoading = useSelector(state => state.postsData.isLoading);
+  const error = useSelector(state => state.postsData.error);
+  const dispatch = useDispatch();
 
   const query = searchParams.get('query');
 
   useEffect(() => {
     if (!query) return;
 
-    const fetchAllPosts = async () => {
-      try {
-        setIsLoading(true);
-        const postData = await findPostById(query);
-
-        setPosts([postData]);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchAllPosts();
-  }, [query]);
+    dispatch(requestPosts(query));
+  }, [query, dispatch]);
 
   const handleFormSubmit = event => {
     event.preventDefault();

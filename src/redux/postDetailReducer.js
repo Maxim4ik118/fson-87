@@ -1,10 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { findPostById } from 'services/api';
+
+export const requestPostDetails = createAsyncThunk(
+  'postDetails/get',
+  async (postId, thunkAPI) => {
+    try {
+      const postData = await findPostById(postId);
+
+      return postData; // ЦЕ БУДЕ ЗАПИСАНО В ЕКШИН ПЕЙЛОАД
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
 
 const INITIAL_STATE = {
   postDetailsData: null,
   isLoading: false,
   error: null,
-  posts: [],
 };
 
 const postDetailsSlice = createSlice({
@@ -12,89 +25,19 @@ const postDetailsSlice = createSlice({
   name: 'postDetails',
   // Початковий стан редюсера слайсу
   initialState: INITIAL_STATE,
-  reducers: {
-    setIsLoading(state, action) {
-      state.isLoading = action.payload;
-    },
-    setPostDetails(state, action) {
+  extraReducers: builder =>
+    builder.addCase(requestPostDetails.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    })
+    .addCase(requestPostDetails.fulfilled, (state, action) => {
+      state.isLoading = false;
       state.postDetailsData = action.payload;
-    },
-    setError(state, action) {
+    })
+    .addCase(requestPostDetails.rejected, (state, action) => {
+      state.isLoading = false;
       state.error = action.payload;
-    },
-    addPost(state, action) {
-      // state.posts.push(action.payload);
-      state.posts = [...state.posts, action.payload];
-    },
-    deletePost(state, action) {
-      state.posts = state.posts.filter(post => post.id !== action.payload);
-      // const deletePostIndex = state.posts.findIndex(post => post.id === action.payload);
-      // state.posts.splice(deletePostIndex, 1);
-    },
-  },
+    }),
 });
 
-// Генератори екшенів
-export const { setIsLoading, setPostDetails, setError, addPost, deletePost } =
-  postDetailsSlice.actions;
-// Редюсер слайсу
 export const postDetailsReducer = postDetailsSlice.reducer;
-
-// export const postDetailsReducer = (state = INITIAL_STATE, action) => {
-//   // action -> { type: 'postDetails/setIsLoading', payload: false }
-//   switch (action.type) {
-//     case 'postDetails/setIsLoading': {
-//       return {
-//         ...state,
-//         isLoading: action.payload,
-//       };
-//     }
-//     case 'postDetails/setPostDetails': {
-//       return {
-//         ...state,
-//         postDetailsData: action.payload,
-//       };
-//     }
-//     case 'postDetails/setError': {
-//       return {
-//         ...state,
-//         error: action.payload,
-//       };
-//     }
-//     case 'postDetails/addPost': {
-//       return {
-//         ...state,
-//         posts: [...state.posts, action.payload],
-//       };
-//     }
-//     case 'postDetails/deletePost': {
-//       return {
-//         ...state,
-//         posts: state.posts.filter(post => post.id !== action.payload),
-//       };
-//     }
-//     default:
-//       return state;
-//   }
-// };
-
-// export const setIsLoading = (payload) => {
-//   return {
-//     type: 'postDetails/setIsLoading',
-//     payload
-//   }
-// }
-
-// export const setPostDetails = (payload) => {
-//   return {
-//     type: 'postDetails/setPostDetails',
-//     payload
-//   }
-// }
-
-// export const setError = (payload) => {
-//   return {
-//     type: 'postDetails/setError',
-//     payload
-//   }
-// }

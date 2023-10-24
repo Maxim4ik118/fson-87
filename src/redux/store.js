@@ -12,6 +12,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import { postDetailsReducer } from './postDetailReducer';
+import { postsReducer } from './postsReducer';
 
 const postDetailsConfig = {
   key: 'postDetails',
@@ -23,6 +24,7 @@ const postDetailsConfig = {
 export const store = configureStore({
   reducer: {
     postDetails: persistReducer(postDetailsConfig, postDetailsReducer),
+    postsData: postsReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
