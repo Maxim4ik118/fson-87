@@ -1,37 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { postDetailsReducer } from './postDetailReducer';
 import { postsReducer } from './postsReducer';
+import { productsReducer } from './productReducer';
 
-const postDetailsConfig = {
-  key: 'postDetails',
-  storage,
-  whitelist: ['posts'],
-//   blacklist: ['filter'],
-};
+export const rootReducer = combineReducers({
+  postDetails: postDetailsReducer,
+  postsData: postsReducer,
+  productsStore: productsReducer,
+})
 
 export const store = configureStore({
-  reducer: {
-    postDetails: persistReducer(postDetailsConfig, postDetailsReducer),
-    postsData: postsReducer,
-  },
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
+  reducer: rootReducer,
 });
-
-export const persistor = persistStore(store);

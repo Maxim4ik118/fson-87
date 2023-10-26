@@ -1,33 +1,15 @@
 import { Suspense, lazy } from 'react';
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
-// import HomePage from 'pages/HomePage';
-// import PostsPage from 'pages/PostsPage';
-// import SearchPage from 'pages/SearchPage';
-// import PostDetailsPage from 'pages/PostDetailsPage';
+import Loader from 'components/Loader';
 
 import { StyledAppContainer, StyledNavLink } from 'App.styled';
-import Loader from 'components/Loader';
 
 const HomePage = lazy(() => import('pages/HomePage'));
 const PostsPage = lazy(() => import('pages/PostsPage'));
 const SearchPage = lazy(() => import('pages/SearchPage'));
 const PostDetailsPage = lazy(() => import('pages/PostDetailsPage'));
-
-/*
-Маршрутизація:
-
- <a href="www.google.com">Google</a> - будь-які посилання на зовнішні ресурси, 
- поза нашим додатком
-
- <Link to="/some-route">Some page</Link>
- <NavLink to="/some-route"> Some page</NavLink> - для маршутизації по нашому додатку
-
-  1. Зміна адресної строки браузера.
-  2. Підготувати Route для відображення, тієї чи іншої сторінки 
-     <Route path="/some-route" element={<HomePage />} />
-
-*/
+const ProductsPage = lazy(() => import('pages/ProductsPage/ProductsPage'));
 
 export const App = () => {
   return (
@@ -43,6 +25,9 @@ export const App = () => {
           <StyledNavLink className="header-link" to="/search">
             Search
           </StyledNavLink>
+          <StyledNavLink className="header-link" to="/products">
+            Products
+          </StyledNavLink>
         </nav>
       </header>
 
@@ -51,7 +36,7 @@ export const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/posts" element={<PostsPage />} />
           <Route path="/search" element={<SearchPage />} />
-          {/* /posts/d12dWAF@ */}
+          <Route path="/products" element={<ProductsPage />} />
           <Route path="/post-details/:postId/*" element={<PostDetailsPage />} />
         </Routes>
       </Suspense>
