@@ -1,24 +1,20 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { rootReducer } from './store';
 
-const selectProductStore = createSelector(
-  rootReducer,
-  state => state.productsStore
-);
+const selectProductsStore = state => state.productsStore;
 
 export const selectProducts = createSelector(
-  selectProductStore,
+  selectProductsStore,
   productsStore => productsStore.products
 );
 export const selectProductsIsLoading = createSelector(
-  selectProductStore,
+  selectProductsStore,
   productsStore => productsStore.isLoading
 );
 export const selectProductsError = createSelector(
-  selectProductStore,
+  selectProductsStore,
   productsStore => productsStore.error
 );
 export const selectProductsFilterTerm = createSelector(
-  selectProductStore,
+  selectProductsStore,
   productsStore => productsStore.filterTerm
 );
