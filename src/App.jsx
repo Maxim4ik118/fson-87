@@ -1,43 +1,49 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import Loader from 'components/Loader';
 
-import { StyledAppContainer, StyledNavLink } from 'App.styled';
+import { StyledAppContainer } from 'App.styled';
+import Navigation from 'components/Navigation';
+import { useDispatch } from 'react-redux';
+import { refreshThunk } from 'redux/authReducer';
 
 const HomePage = lazy(() => import('pages/HomePage'));
 const PostsPage = lazy(() => import('pages/PostsPage'));
 const SearchPage = lazy(() => import('pages/SearchPage'));
 const PostDetailsPage = lazy(() => import('pages/PostDetailsPage'));
 const ProductsPage = lazy(() => import('pages/ProductsPage/ProductsPage'));
+const RegisterPage = lazy(() => import('pages/RegisterPage'));
+const LoginPage = lazy(() => import('pages/LoginPage'));
+const ContactsPage = lazy(() => import('pages/ContactsPage'));
+
+const appRoutes = [
+  { path: '/', element: <HomePage /> },
+  { path: '/posts', element: <PostsPage /> },
+  { path: '/search', element: <SearchPage /> },
+  { path: '/products', element: <ProductsPage /> },
+  { path: '/post-details/:postId/*', element: <PostDetailsPage /> },
+  { path: '/register', element: <RegisterPage /> },
+  { path: '/login', element: <LoginPage /> },
+  { path: '/contacts', element: <ContactsPage /> },
+];
 
 export const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(refreshThunk())
+  }, [dispatch])
+
   return (
     <StyledAppContainer>
-      <header>
-        <nav>
-          <StyledNavLink className="header-link" to="/">
-            Home
-          </StyledNavLink>
-          <StyledNavLink className="header-link" to="/posts">
-            Posts
-          </StyledNavLink>
-          <StyledNavLink className="header-link" to="/search">
-            Search
-          </StyledNavLink>
-          <StyledNavLink className="header-link" to="/products">
-            Products
-          </StyledNavLink>
-        </nav>
-      </header>
+      <Navigation />
 
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/posts" element={<PostsPage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/post-details/:postId/*" element={<PostDetailsPage />} />
+          {appRoutes.map(({ path, element }) => (
+            <Route key={path} path={path} element={element} />
+          ))}
         </Routes>
       </Suspense>
     </StyledAppContainer>
