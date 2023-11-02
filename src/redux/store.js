@@ -16,6 +16,7 @@ import { postDetailsReducer } from './postDetailReducer';
 import { postsReducer } from './postsReducer';
 import { productsReducer } from './productReducer';
 import { authReducer } from './authReducer';
+import { contactsReducer } from './contactsReducer';
 
 const authConfig = {
   key: 'auth',
@@ -27,6 +28,7 @@ export const rootReducer = combineReducers({
   postDetails: postDetailsReducer,
   postsData: postsReducer,
   productsStore: productsReducer,
+  phonebook: contactsReducer,
   auth: persistReducer(authConfig, authReducer),
 });
 

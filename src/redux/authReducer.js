@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import {
   requestLogin,
+  requestLogout,
   requestRefreshUser,
   requestRegister,
   setToken,
@@ -37,11 +38,10 @@ export const refreshThunk = createAsyncThunk(
   async (_, thunkAPI) => {
     const state = thunkAPI.getState();
     const token = state.auth.token;
-    
+
     try {
       setToken(token);
       const authData = await requestRefreshUser();
-      console.log('authData: ', authData);
 
       return authData; // ЦЕ БУДЕ ЗАПИСАНО В ЕКШИН ПЕЙЛОАД
     } catch (error) {
@@ -56,6 +56,19 @@ export const refreshThunk = createAsyncThunk(
       if (!token) return false;
       return true;
     },
+  }
+);
+
+export const logOutThunk = createAsyncThunk(
+  'auth/logOut',
+  async (_, thunkAPI) => {
+    try {
+      await requestLogout();
+
+      return; // ЦЕ БУДЕ ЗАПИСАНО В ЕКШИН ПЕЙЛОАД
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
 );
 
@@ -78,46 +91,48 @@ const authSlice = createSlice({
   extraReducers: builder =>
     builder
       // ---------- REGISTER USER ----------------
-      .addCase(registerThunk.pending, state => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(registerThunk.fulfilled, (state, action) => {
         state.isLoading = false;
         state.authenticated = true;
         state.token = action.payload.token;
         state.user = action.payload.user;
       })
-      .addCase(registerThunk.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
       // ---------- LOGIN USER ----------------
-      .addCase(loginThunk.pending, state => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(loginThunk.fulfilled, (state, action) => {
         state.isLoading = false;
         state.authenticated = true;
         state.token = action.payload.token;
         state.user = action.payload.user;
       })
-      .addCase(loginThunk.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
       // ---------- REFRESH USER ----------------
-      .addCase(refreshThunk.pending, state => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(refreshThunk.fulfilled, (state, action) => {
         state.isLoading = false;
         state.authenticated = true;
         state.user = action.payload;
       })
-      .addCase(refreshThunk.rejected, (state, action) => {
+      // ---------- LOGOUT USER ----------------
+      .addCase(logOutThunk.fulfilled, () => {
+        return INITIAL_STATE;
+      })
+
+      .addMatcher(
+        isAnyOf(
+          logOutThunk.pending,
+          registerThunk.pending,
+          loginThunk.pending,
+          refreshThunk.pending
+        ),
+        state => {
+          state.isLoading = true;
+          state.error = null;
+        }
+      )
+      .addMatcher(isAnyOf(
+        logOutThunk.rejected,
+        registerThunk.rejected,
+        loginThunk.rejected,
+        refreshThunk.rejected
+      ), (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       }),

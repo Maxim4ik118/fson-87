@@ -5,8 +5,11 @@ import Loader from 'components/Loader';
 
 import { StyledAppContainer } from 'App.styled';
 import Navigation from 'components/Navigation';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { refreshThunk } from 'redux/authReducer';
+import RestictedRoute from 'components/RestictedRoute';
+import PrivateRoute from 'components/PrivateRoute';
+import { selectAuthIsLoading } from 'redux/auth.selectors';
 
 const HomePage = lazy(() => import('pages/HomePage'));
 const PostsPage = lazy(() => import('pages/PostsPage'));
@@ -21,31 +24,64 @@ const appRoutes = [
   { path: '/', element: <HomePage /> },
   { path: '/posts', element: <PostsPage /> },
   { path: '/search', element: <SearchPage /> },
-  { path: '/products', element: <ProductsPage /> },
+  {
+    path: '/products',
+    element: (
+      <PrivateRoute>
+        <ProductsPage />
+      </PrivateRoute>
+    ),
+  },
   { path: '/post-details/:postId/*', element: <PostDetailsPage /> },
-  { path: '/register', element: <RegisterPage /> },
-  { path: '/login', element: <LoginPage /> },
-  { path: '/contacts', element: <ContactsPage /> },
+  {
+    path: '/register',
+    element: (
+      <RestictedRoute>
+        <RegisterPage />
+      </RestictedRoute>
+    ),
+  },
+  {
+    path: '/login',
+    element: (
+      <RestictedRoute>
+        <LoginPage />
+      </RestictedRoute>
+    ),
+  },
+  {
+    path: '/contacts',
+    element: (
+      <PrivateRoute>
+        <ContactsPage />
+      </PrivateRoute>
+    ),
+  },
 ];
 
 export const App = () => {
   const dispatch = useDispatch();
-
+  const isRefreshing = useSelector(selectAuthIsLoading);
+  
   useEffect(() => {
-    dispatch(refreshThunk())
-  }, [dispatch])
+    dispatch(refreshThunk());
+  }, [dispatch]);
 
   return (
     <StyledAppContainer>
       <Navigation />
 
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          {appRoutes.map(({ path, element }) => (
-            <Route key={path} path={path} element={element} />
-          ))}
-        </Routes>
-      </Suspense>
+      {isRefreshing ? (
+        <Loader />
+      ) : (
+        <Suspense fallback={<Loader />}>
+          <Routes>
+            {appRoutes.map(({ path, element }) => (
+              <Route key={path} path={path} element={element} />
+            ))}
+          </Routes>
+        </Suspense>
+      )}
     </StyledAppContainer>
   );
 };
